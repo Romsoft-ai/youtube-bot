@@ -1,0 +1,11 @@
+# Fichiers sensibles
+client_secret.json
+token.pickle
+test.txt
+
+# Python
+__pycache__/
+*.pyc
+
+# Environnement
+.env
