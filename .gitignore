@@ -1,9 +1,7 @@
 # Fichiers sensibles
-client_secret.json
-token.pickle
 test.txt
 
-# Python
+# Python    
 __pycache__/
 *.pyc
 
