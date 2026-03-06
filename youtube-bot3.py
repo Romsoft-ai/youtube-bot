@@ -18,7 +18,7 @@ def get_credentials():
     # Choix du projet selon l'heure
     now = datetime.datetime.now()
     hour = now.hour
-    if 14 <= hour < 22:
+    if 10 <= hour < 22:
         client_secrets_file = "client_secret_1.json"
         token_file = "token_1.pickle"
     else:
@@ -60,8 +60,8 @@ def generate_dynamic_thumbnail(view_count):
     font_size = 60
     font = ImageFont.truetype(font_path, font_size)
 
-    # Calcul du palier de 500
-    palier = int(round(view_count / 500.0) * 500)
+    # Calcul du palier de 100
+    palier = (view_count // 100) * 100
     # Format k (ex: 10k, 10.5k, 11k...)
     if palier % 1000 == 0:
         vues_str = f"{palier // 1000}k"
@@ -81,11 +81,8 @@ def generate_dynamic_thumbnail(view_count):
 
 def get_thumbnail_path(view_count):
     view_count = int(view_count)
-    if view_count < 10000:
-        if view_count < 1000:
-            palier = (view_count // 100 + 1) * 100
-        else:
-            palier = (view_count // 1000 + 1) * 1000
+    if view_count < 1000:
+        palier = (view_count // 100 + 1) * 100
         return f"miniatures/{palier}.png"
     else:
         # Générer la miniature dynamique et retourner son chemin
