@@ -18,7 +18,7 @@ def get_credentials():
     # Choix du projet selon l'heure
     now = datetime.datetime.now()
     hour = now.hour
-    if 10 <= hour < 22:
+    if 5 <= hour < 14:
         client_secrets_file = "client_secret_1.json"
         token_file = "token_1.pickle"
     else:
