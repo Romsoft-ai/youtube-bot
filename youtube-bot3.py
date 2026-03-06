@@ -10,7 +10,7 @@ from googleapiclient.http import MediaFileUpload
 from PIL import Image, ImageDraw, ImageFont
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
-VIDEO_ID = "sko6ULR8M1M"
+VIDEO_ID = "w-T_qMMFiLg"  
 THUMBNAIL_PATH = "miniatures/miniature_essaie.png"
 
 # Authentification persistante (token)
@@ -52,7 +52,7 @@ def generate_dynamic_thumbnail(view_count):
     """
     Génère une miniature dynamique à partir de background.png pour les vues >= 10 000
     Texte : Cette vidéo va faire\nXXk vues
-    Palier de 500 vues, format 10k, 10.5k, 11k, etc.
+    Palier de 100 vues, format 10k, 10.5k, 11k, etc.
     """
     background_path = "miniatures/background.png"
     img = Image.open(background_path).convert("RGBA")
