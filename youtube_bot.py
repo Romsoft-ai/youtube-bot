@@ -29,39 +29,36 @@ def get_credentials():
     return creds
 
 def update_title_loop():
-    while True:
-        creds = get_credentials()
-        youtube = googleapiclient.discovery.build(
-            "youtube", "v3", credentials=creds)
-        # Récupérer le nombre de vues, la description ET les tags actuels
-        request = youtube.videos().list(
-            part="statistics,snippet",
-            id="sko6ULR8M1M"
-        )
-        response = request.execute()
-        view_count = response["items"][0]["statistics"]["viewCount"]
-        snippet = response["items"][0]["snippet"]
-        current_description = snippet["description"]
-        current_tags = snippet.get("tags", [])
-        current_category = snippet.get("categoryId", "27")
-        print(f"Nombre de vues: {view_count}")
-        new_title = f"Cette video va faire {view_count} vues"
-        update_request = youtube.videos().update(
-            part="snippet",
-            body={
-                "id": "sko6ULR8M1M",
-                "snippet": {
-                    "title": new_title,
-                    "description": current_description,
-                    "tags": current_tags,
-                    "categoryId": current_category
-                }
+    creds = get_credentials()
+    youtube = googleapiclient.discovery.build(
+        "youtube", "v3", credentials=creds)
+    # Récupérer le nombre de vues, la description ET les tags actuels
+    request = youtube.videos().list(
+        part="statistics,snippet",
+        id="sko6ULR8M1M"
+    )
+    response = request.execute()
+    view_count = response["items"][0]["statistics"]["viewCount"]
+    snippet = response["items"][0]["snippet"]
+    current_description = snippet["description"]
+    current_tags = snippet.get("tags", [])
+    current_category = snippet.get("categoryId", "27")
+    print(f"Nombre de vues: {view_count}")
+    new_title = f"Cette video va faire {view_count} vues"
+    update_request = youtube.videos().update(
+        part="snippet",
+        body={
+            "id": "sko6ULR8M1M",
+            "snippet": {
+                "title": new_title,
+                "description": current_description,
+                "tags": current_tags,
+                "categoryId": current_category
             }
-        )
-        update_response = update_request.execute()
-        print(f"Titre mis à jour: {new_title}")
-        print("Attente de 8 minutes...")
-        time.sleep(8 * 60)
+        }
+    )
+    update_response = update_request.execute()
+    print(f"Titre mis à jour: {new_title}")
 
 if __name__ == "__main__":
     update_title_loop()

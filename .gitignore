@@ -1,5 +1,6 @@
 # Fichiers sensibles
 test.txt
+genere_image.ipynb
 
 # Python    
 __pycache__/
