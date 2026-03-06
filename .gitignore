@@ -1,8 +1,11 @@
 # Fichiers sensibles
 test.txt
-genere_image.ipynb
+genere_image.ipynb 
+client_secret_1.json
+client_secret_2.json
+token.pickle
 
-# Python    
+# Python
 __pycache__/
 *.pyc
 
