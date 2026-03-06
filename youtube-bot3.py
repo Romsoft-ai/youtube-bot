@@ -39,6 +39,15 @@ def get_credentials():
             pickle.dump(creds, token)
     return creds
 
+def to_bold_unicode(text):
+    # Lettres et chiffres gras Unicode (math bold)
+    bold_map = {
+        **{chr(i): chr(0x1D400 + i - ord('A')) for i in range(ord('A'), ord('Z')+1)},
+        **{chr(i): chr(0x1D41A + i - ord('a')) for i in range(ord('a'), ord('z')+1)},
+        **{chr(i): chr(0x1D7CE + i - ord('0')) for i in range(ord('0'), ord('9')+1)}
+    }
+    return ''.join(bold_map.get(c, c) for c in text)
+
 def generate_dynamic_thumbnail(view_count):
     """
     Génère une miniature dynamique à partir de background.png pour les vues >= 10 000
@@ -98,7 +107,8 @@ def update_title_and_thumbnail():
     current_tags = snippet.get("tags", [])
     current_category = snippet.get("categoryId", "27")
     print(f"Nombre de vues: {view_count}")
-    new_title = f"Elle va faire {view_count} pour être précis"
+    base_title = f"Elle va faire {view_count} vues pour être précis"
+    new_title = to_bold_unicode(base_title)
     # Choisir la miniature selon le palier
     thumbnail_path = get_thumbnail_path(view_count)
     # Mettre à jour le titre
