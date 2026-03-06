@@ -4,6 +4,8 @@ genere_image.ipynb
 client_secret_1.json
 client_secret_2.json
 token.pickle
+token_1.pickle
+token_2.pickle
 
 # Python
 __pycache__/
