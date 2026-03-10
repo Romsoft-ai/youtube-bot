@@ -88,6 +88,14 @@ def get_thumbnail_path(view_count):
         # Générer la miniature dynamique et retourner son chemin
         return generate_dynamic_thumbnail(view_count)
 
+def get_thumbnail_palier(view_count):
+    view_count = int(view_count)
+    if view_count < 1000:
+        palier = (view_count // 100 + 1) * 100
+    else:
+        palier = (view_count // 100) * 100
+    return palier
+
 def update_title_and_thumbnail():
     creds = get_credentials()
     youtube = googleapiclient.discovery.build(
@@ -98,7 +106,7 @@ def update_title_and_thumbnail():
         id=VIDEO_ID
     )
     response = request.execute()
-    view_count = response["items"][0]["statistics"]["viewCount"]
+    view_count = int(response["items"][0]["statistics"]["viewCount"])
     snippet = response["items"][0]["snippet"]
     current_description = snippet["description"]
     current_tags = snippet.get("tags", [])
@@ -108,6 +116,16 @@ def update_title_and_thumbnail():
     new_title = to_bold_unicode(base_title)
     # Choisir la miniature selon le palier
     thumbnail_path = get_thumbnail_path(view_count)
+    # Gestion du fichier vues.txt
+    vues_file = "vues.txt"
+    palier_actuel = get_thumbnail_palier(view_count)
+    palier_prec = 700
+    if os.path.exists(vues_file):
+        with open(vues_file, "r") as f:
+            try:
+                palier_prec = int(f.read().strip())
+            except Exception:
+                palier_prec = None
     # Mettre à jour le titre
     update_request = youtube.videos().update(
         part="snippet",
@@ -123,14 +141,23 @@ def update_title_and_thumbnail():
     )
     update_response = update_request.execute()
     print(f"Titre mis à jour: {new_title}")
-    # Mettre à jour la miniature
-    media = MediaFileUpload(thumbnail_path)
-    thumbnail_request = youtube.thumbnails().set(
-        videoId=VIDEO_ID,
-        media_body=media
-    )
-    thumbnail_response = thumbnail_request.execute()
-    print(f"Miniature mise à jour avec {thumbnail_path}")
+    # Mettre à jour la miniature uniquement si le palier a changé
+    if palier_prec != palier_actuel:
+        try:
+            media = MediaFileUpload(thumbnail_path)
+            thumbnail_request = youtube.thumbnails().set(
+                videoId=VIDEO_ID,
+                media_body=media
+            )
+            thumbnail_response = thumbnail_request.execute()
+            print(f"Miniature mise à jour avec {thumbnail_path}")
+            # Écrire le nouveau palier dans vues.txt
+            with open(vues_file, "w") as f:
+                f.write(str(palier_actuel))
+        except Exception as e:
+            print(f"Erreur lors de la mise à jour de la miniature : {e}")
+    else:
+        print("Miniature inchangée (palier identique).")
 
 if __name__ == "__main__":
     update_title_and_thumbnail()
